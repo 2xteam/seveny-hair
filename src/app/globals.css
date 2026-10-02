@@ -389,7 +389,9 @@ ul { margin-top: 0; margin-bottom: 10px; padding-left: 40px; }
   position: relative;
   min-height: 100vh;
   margin-left: var(--nav-w);
+  /* hidden 은 스크롤 컨테이너가 돼서 안쪽 position: sticky(모바일 고정 배경)를 막는다. clip 은 막지 않는다 */
   overflow: hidden;
+  overflow: clip;
 }
 
 /* ───────── 공통 섹션 ───────── */
@@ -414,7 +416,13 @@ ul { margin-top: 0; margin-bottom: 10px; padding-left: 40px; }
 .section.image-cta { color: #fff; }
 /*
  * 고정 배경 섹션 (testimonials · image-cta · brand-band · milestones) — FixedBg 컴포넌트.
- * 원본은 background-attachment: fixed 였지만 모바일 브라우저가 무시해서 레이어 방식으로 바꿨다.
+ *
+ * PC(마우스): 원본 그대로 background-attachment: fixed.
+ * 터치 기기: 모바일 브라우저는 fixed 배경을 무시하고 섹션 전체 높이에 cover 해서 그림이 크게 확대된다.
+ *   "position: fixed 레이어 + clip" 방식은 iOS 가 스크롤 중에 다시 그리지 않아 비었다가 늦게 나타났다
+ *   (2026-10-02 실기기 확인). 그래서 화면 높이 레이어를 position: sticky 로 섹션 안에 붙인다.
+ *   sticky 는 iOS 가 스크롤과 같은 단계에서 처리해서 늦게 그려지지 않는다.
+ *   조건: 조상에 overflow: hidden 이 없어야 한다 (.page-wrapper 는 overflow: clip).
  */
 .section.has-fixed-bg {
   isolation: isolate;
@@ -424,23 +432,27 @@ ul { margin-top: 0; margin-bottom: 10px; padding-left: 40px; }
   z-index: -1;
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  /* fixed 자식을 섹션 영역으로 자른다 (clip 은 iOS 구형, clip-path 는 최신) */
-  clip: rect(0, auto, auto, 0);
-  clip-path: inset(0);
+  overflow: clip; /* hidden 이면 sticky 가 이 상자 기준이 돼서 움직이지 않는다 */
   pointer-events: none;
 }
 .fixed-bg-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100lvh; /* 모바일 주소창이 접혀도 빈틈이 생기지 않게 큰 뷰포트 기준 */
+  position: absolute;
+  inset: 0;
   background-position: 0 0, 50% 50%;
   background-repeat: repeat, no-repeat;
   background-size: auto, cover;
-  will-change: transform;
+  background-attachment: scroll, fixed;
+}
+@media (hover: none), (pointer: coarse) {
+  .fixed-bg-layer {
+    position: sticky;
+    inset: auto;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100lvh; /* 주소창이 접혀도 아래에 빈틈이 생기지 않게 큰 뷰포트 기준 */
+    background-attachment: scroll, scroll;
+  }
 }
 .wrapper {
   position: relative;
