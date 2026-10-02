@@ -411,20 +411,36 @@ ul { margin-top: 0; margin-bottom: 10px; padding-left: 40px; }
   background-image: linear-gradient(#fff, #f9ffe8);
   padding-top: 0;
 }
-.section.image-cta {
-  color: #fff;
-  background-image: linear-gradient(#1119, #1119), var(--bg);
-  background-position: 0 0, 50%;
-  background-repeat: repeat, no-repeat;
-  background-size: auto, cover;
-  background-attachment: scroll, fixed;
+.section.image-cta { color: #fff; }
+/*
+ * 고정 배경 섹션 (testimonials · image-cta · brand-band · milestones) — FixedBg 컴포넌트.
+ * 원본은 background-attachment: fixed 였지만 모바일 브라우저가 무시해서 레이어 방식으로 바꿨다.
+ */
+.section.has-fixed-bg {
+  isolation: isolate;
+  background-color: #111;
 }
-.section.testimonials {
-  background-image: linear-gradient(#111111b3, #111111b3), var(--bg);
-  background-position: 0 0, 50%;
+.fixed-bg {
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* fixed 자식을 섹션 영역으로 자른다 (clip 은 iOS 구형, clip-path 는 최신) */
+  clip: rect(0, auto, auto, 0);
+  clip-path: inset(0);
+  pointer-events: none;
+}
+.fixed-bg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh; /* 모바일 주소창이 접혀도 빈틈이 생기지 않게 큰 뷰포트 기준 */
+  background-position: 0 0, 50% 50%;
   background-repeat: repeat, no-repeat;
   background-size: auto, cover;
-  background-attachment: scroll, fixed;
+  will-change: transform;
 }
 .wrapper {
   position: relative;

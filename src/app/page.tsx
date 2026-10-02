@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CtaSection from "@/components/CtaSection";
+import FixedBg from "@/components/FixedBg";
 import { IconArrowDown, IconLocation } from "@/components/Icons";
 import InstagramCards from "@/components/InstagramCards";
 import Logo from "@/components/Logo";
@@ -9,7 +10,11 @@ import TestimonialSlider from "@/components/TestimonialSlider";
 import ValuesRow from "@/components/ValuesRow";
 import { LINKS, REVIEW_STATS } from "@/content/defaults";
 import { PHOTOS } from "@/content/photos";
+import type { Metadata } from "next";
+import { routeMetadata } from "@/lib/seo";
 import { getInstagram, getPage, getShop, getTestimonials } from "@/lib/queries";
+
+export const metadata: Metadata = routeMetadata("home");
 
 export default async function HomePage() {
   const [shop, page, testimonials, feed] = await Promise.all([
@@ -76,7 +81,8 @@ export default async function HomePage() {
       {values?.items && <ValuesRow items={values.items} />}
 
       {/* ───── 후기 (네이버 리뷰 키워드) ───── */}
-      <div className="section testimonials" style={{ "--bg": `url("${PHOTOS.interiorWide}")` } as React.CSSProperties}>
+      <div className="section testimonials has-fixed-bg">
+        <FixedBg image={PHOTOS.interiorWide} overlay="#111111b3" />
         <div className="wrapper side-padding">
           <TestimonialSlider
             heading={"What our\nguests say"}

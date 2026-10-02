@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { IconCalendar, IconHome, IconInstagram, IconPhone } from "@/components/Icons";
 import { LINKS } from "@/content/defaults";
+import { routeMetadata } from "@/lib/seo";
 import { getPage, getShop } from "@/lib/queries";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getPage("contact")).title };
-}
+export const metadata: Metadata = routeMetadata("contact");
 
 /** 원본 /kontakt — 왼쪽 연락처·영업시간, 오른쪽 50vw × 100vh 사진. 푸터 없음 */
 export default async function ContactPage() {

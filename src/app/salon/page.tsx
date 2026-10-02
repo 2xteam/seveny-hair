@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
+import FixedBg from "@/components/FixedBg";
 import Gallery from "@/components/Gallery";
 import { Lines } from "@/components/Lines";
 import PageHero from "@/components/PageHero";
 import SiteFooter from "@/components/SiteFooter";
 import ValuesRow from "@/components/ValuesRow";
 import { gallery } from "@/content/pages";
+import { routeMetadata } from "@/lib/seo";
 import { getPage, getShop } from "@/lib/queries";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getPage("salon")).title };
-}
+export const metadata: Metadata = routeMetadata("salon");
 
 function Paragraphs({ items }: { items?: string[] }) {
   return (
@@ -64,7 +64,8 @@ export default async function SalonPage() {
       <Gallery desktop={gallery.desktop} mobile={gallery.mobile} />
 
       {london && (
-        <div className="section brand-band" style={{ "--bg": `url("${bg?.src}")` } as React.CSSProperties}>
+        <div className="section brand-band has-fixed-bg">
+          {bg && <FixedBg image={bg.src} overlay="#0009" />}
           <div className="wrapper">
             <div className="side-feature-3">
               <div className="side-media" data-reveal="right">

@@ -137,12 +137,7 @@
 .lightbox .lb-next { right: 8px; }
 
 /* 브랜드 띠 (원본 .section.dashaarlokal) */
-.section.brand-band {
-  background-image: linear-gradient(#0009, #0009), var(--bg);
-  background-position: 0 0, 50% 0;
-  background-size: auto, cover;
-  background-attachment: scroll, fixed;
-}
+.section.brand-band { color: #fff; }
 .side-feature-3 { width: 100%; display: flex; justify-content: center; align-items: center; }
 .brand-products {
   box-shadow: 8px 8px 28px #0000004d;
@@ -186,13 +181,7 @@
 }
 
 /* 마일스톤 */
-.section.milestones {
-  color: #fff;
-  background-image: linear-gradient(#111111b3, #111111b3), var(--bg);
-  background-position: 0 0, 50%;
-  background-size: auto, cover;
-  background-attachment: scroll, fixed;
-}
+.section.milestones { color: #fff; }
 .milestones-box { width: 400px; text-align: center; }
 .job {
   margin-bottom: -1px;

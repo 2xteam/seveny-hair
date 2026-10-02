@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 파비콘: 로고의 정사각 테두리 + S. 작은 크기라 대각선 띠는 S 한가운데만 지나게 했다 -->
+  <rect width="64" height="64" fill="#fff"/>
+  <rect x="5" y="5" width="54" height="54" fill="none" stroke="#111" stroke-width="4"/>
+  <defs>
+    <mask id="band">
+      <rect width="64" height="64" fill="#fff"/>
+      <line x1="18" y1="8" x2="44" y2="58" stroke="#000" stroke-width="3"/>
+    </mask>
+  </defs>
+  <text x="32" y="47" text-anchor="middle" font-family="Didot, 'Bodoni 72', 'Times New Roman', serif" font-size="42" fill="#111" mask="url(#band)">S</text>
+</svg>

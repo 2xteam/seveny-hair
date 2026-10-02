@@ -5,11 +5,10 @@ import PriceTabs from "@/components/PriceTabs";
 import SiteFooter from "@/components/SiteFooter";
 import StyleBook from "@/components/StyleBook";
 import { styles } from "@/content/styles";
+import { routeMetadata } from "@/lib/seo";
 import { getPage, getServices, getShop } from "@/lib/queries";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getPage("services")).title };
-}
+export const metadata: Metadata = routeMetadata("services");
 
 export default async function ServicesPage() {
   const [shop, page, tables, home] = await Promise.all([getShop(), getPage("services"), getServices(), getPage("home")]);

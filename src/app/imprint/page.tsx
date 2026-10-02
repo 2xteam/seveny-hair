@@ -3,7 +3,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { BUSINESS } from "@/content/defaults";
 import { getShop } from "@/lib/queries";
 
-export const metadata: Metadata = { title: "사업자 정보 — 세브니헤어" };
+export const metadata: Metadata = { title: "사업자 정보", alternates: { canonical: "/imprint" } };
 
 /** 푸터 "사업자 정보" 링크 대상. 디자이너 실명은 이 페이지에만 쓴다. 사업자등록번호는 고객 확인 후 채운다. */
 export default async function ImprintPage() {

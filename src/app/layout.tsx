@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Preloader from "@/components/Preloader";
 import ScrollEffects from "@/components/ScrollEffects";
 import SiteNav from "@/components/SiteNav";
+import { LINKS } from "@/content/defaults";
+import { PHOTOS } from "@/content/photos";
+import { KEYWORDS, ROUTES, SITE_NAME, siteUrl } from "@/content/seo";
 import { getShop } from "@/lib/queries";
 import "./globals.css";
 import "./subpages.css";
@@ -34,11 +37,61 @@ const GOOGLE_FONTS =
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const shop = await getShop();
+/** 공통 메타데이터 — 라우트마다 lib/seo.ts 의 routeMetadata 가 덮어쓴다 */
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
+  title: { default: ROUTES.home.title, template: `%s | ${SITE_NAME}` },
+  description: ROUTES.home.description,
+  applicationName: SITE_NAME,
+  keywords: KEYWORDS,
+  authors: [{ name: "Seveny" }],
+  formatDetection: { telephone: true, address: true },
+  openGraph: { type: "website", locale: "ko_KR", siteName: SITE_NAME },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = { themeColor: "#111111" };
+
+/**
+ * 검색엔진용 매장 정보 (schema.org HairSalon). 네이버 플레이스 기준 값.
+ * 리뷰 평점은 넣지 않는다 — 자기 사이트에 올린 자체 리뷰 평점은 구글이 리치 결과에서 제외한다.
+ */
+function salonJsonLd() {
+  const url = siteUrl();
+  const day = (d: string[], opens: string, closes: string) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: d,
+    opens,
+    closes,
+  });
   return {
-    title: "SEVENY HAIR 세브니헤어 — 동래 1인 헤어살롱",
-    description: `부산 동래 충렬사로의 1인 헤어살롱. 상담부터 커트·펌·컬러까지 ${shop.owner}가 직접 시술합니다. 우선 예약제.`,
+    "@context": "https://schema.org",
+    "@type": "HairSalon",
+    "@id": `${url}/#salon`,
+    name: "세브니헤어",
+    alternateName: "SEVENY HAIR",
+    url,
+    image: [PHOTOS.interior, PHOTOS.interiorWide, PHOTOS.signWall],
+    logo: `${url}/icon.svg`,
+    description: ROUTES.home.description,
+    telephone: "+82-507-1351-8646",
+    priceRange: "₩18,000 – ₩140,000",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "충렬사로 38, 1층",
+      addressLocality: "동래구",
+      addressRegion: "부산광역시",
+      addressCountry: "KR",
+    },
+    geo: { "@type": "GeoCoordinates", latitude: 35.2024218, longitude: 129.0979297 },
+    hasMap: LINKS.map,
+    openingHoursSpecification: [
+      day(["Monday", "Wednesday", "Friday", "Saturday", "Sunday"], "10:00", "20:00"),
+      day(["Thursday"], "10:00", "17:00"),
+    ],
+    sameAs: [LINKS.instagram, LINKS.blog, LINKS.youtube, LINKS.naverPlace],
+    potentialAction: { "@type": "ReserveAction", target: LINKS.booking },
   };
 }
 
@@ -59,6 +112,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(salonJsonLd()) }}
+        />
         <Preloader />
         <SiteNav
           name={shop.name}

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import FixedBg from "@/components/FixedBg";
 import PageHero from "@/components/PageHero";
 import SiteFooter from "@/components/SiteFooter";
+import { routeMetadata } from "@/lib/seo";
 import { getPage, getShop, getStaff } from "@/lib/queries";
 import type { Staff } from "@/lib/types";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getPage("about")).title };
-}
+export const metadata: Metadata = routeMetadata("about");
 
 function PersonText({ p }: { p: Staff }) {
   return (
@@ -72,10 +72,8 @@ export default async function AboutPage() {
       )}
 
       {milestones && (
-        <div
-          className="section milestones"
-          style={{ "--bg": `url("${milestones.images?.[0]?.src}")` } as React.CSSProperties}
-        >
+        <div className="section milestones has-fixed-bg">
+          {milestones.images?.[0] && <FixedBg image={milestones.images[0].src} overlay="#111111b3" />}
           <div className="milestones-box">
             <h2 className="heading">{milestones.heading}</h2>
             {milestones.items?.map((m, i) => (
