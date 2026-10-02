@@ -9,6 +9,12 @@
  */
 
 :root {
+  /* 폰트 이름 — layout.tsx 의 Google Fonts 링크로 불러온다 */
+  --font-futura: "Jost";
+  --font-bodoni: "Bodoni Moda";
+  --font-oswald: "Oswald";
+  --font-script: "Pinyon Script";
+  --font-serif-kr: "Noto Serif KR";
   --black: #111;
   --yellow: #faaf52;
   --gainsboro: #ddd;

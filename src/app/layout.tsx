@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Jost, Noto_Serif_KR, Oswald, Pinyon_Script } from "next/font/google";
 import Preloader from "@/components/Preloader";
 import ScrollEffects from "@/components/ScrollEffects";
 import SiteNav from "@/components/SiteNav";
@@ -18,40 +17,20 @@ import "./subpages.css";
  *   본문(futura 계열) → Pretendard (CDN 동적 서브셋, 300 위주)
  *   제목(bodoni 계열) → Noto Serif KR 300
  */
-const futura = Jost({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-futura",
-  display: "swap",
-});
-const bodoni = Bodoni_Moda({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-bodoni",
-  display: "swap",
-});
-const oswald = Oswald({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-oswald",
-  display: "swap",
-});
-
-const script = Pinyon_Script({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-script",
-  display: "swap",
-});
-
-const serifKr = Noto_Serif_KR({
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  variable: "--font-serif-kr",
-  display: "swap",
-  preload: false, // 한글 서브셋이 커서 미리 받지 않는다
-});
+/**
+ * 폰트는 빌드 때 받지 않고 브라우저가 Google Fonts 에서 직접 받는다.
+ * next/font/google 은 빌드 중에 폰트 파일(특히 Noto Serif KR 248개)을 내려받다가
+ * 캐시 없는 빌드(Vercel)에서 간헐적으로 실패했다 (2026-10-02).
+ * 변수 이름(--font-futura 등)은 globals.css 의 :root 에서 정의한다.
+ */
+const GOOGLE_FONTS =
+  "https://fonts.googleapis.com/css2" +
+  "?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300" +
+  "&family=Bodoni+Moda:wght@400" +
+  "&family=Oswald:wght@400;500" +
+  "&family=Pinyon+Script" +
+  "&family=Noto+Serif+KR:wght@300;400" +
+  "&display=swap";
 
 export const dynamic = "force-dynamic";
 
@@ -66,11 +45,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const shop = await getShop();
   return (
-    <html
-      lang="ko"
-      className={`${futura.variable} ${bodoni.variable} ${oswald.variable} ${script.variable} ${serifKr.variable}`}
-    >
+    <html lang="ko">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link rel="stylesheet" href={GOOGLE_FONTS} />
         {/* Pretendard — 한글 본문. next/font 에 없어 공식 CDN 의 동적 서브셋을 쓴다 */}
         <link
           rel="stylesheet"
